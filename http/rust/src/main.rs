@@ -1,14 +1,13 @@
-use actix_web::{get, App, HttpServer, Responder};
+use axum::{routing::get, Router};
 
-#[get("/")]
-async fn root() -> impl Responder {
-    format!("Hello from Rust")
-}
+#[tokio::main]
+async fn main() {
+    // build our application with a single route
+    let app = Router::new().route("/", get(|| async { "Hello from Rust" }));
 
-#[actix_web::main] // or #[tokio::main]
-async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(root))
-        .bind(("0.0.0.0", 3000))?
-        .run()
+    // run it with hyper on localhost:3000
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
         .await
+        .unwrap();
 }
