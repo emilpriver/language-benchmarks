@@ -1,11 +1,15 @@
 {
   "name": "bun",
-  "module": "index.ts",
-  "type": "module",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "elysia": "latest"
+  },
   "devDependencies": {
     "bun-types": "latest"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+  "module": "src/index.js"
 }
