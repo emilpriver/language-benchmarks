@@ -1,10 +1,14 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -12,6 +16,7 @@ import (
 
 var hosts = []string{
 	"http://localhost:3000",
+	"http://172.232.132.21",
 }
 
 type Result struct {
@@ -34,19 +39,10 @@ type Response struct {
 	Results     []Result `json:"results"`
 }
 
-/*
-* TODO:
-* - 1. Send initial request to elton
-* - 2. Pull result until job is Done
-* - 3. Send result to channel
-* - 4. Read result and concat into a bigger slice of results containing all clients result
-* - 5. Write to CSV
- */
-
-var ch = make(chan []Result)
-
 func main() {
 	var wg sync.WaitGroup
+
+	ch := make(chan []Result, 1000)
 
 	for _, url := range hosts {
 		wg.Add(1)
@@ -56,8 +52,8 @@ func main() {
 
 			payload := strings.NewReader(`{
 				"method": "GET",
-				"tasks": 16,
-				"seconds": 3,
+				"tasks": 1000,
+				"seconds": 30,
 				"start_at": "2023-09-17T10:16:34.675Z",
 				"url": "https://httpbin.org/ip", 
 				"content_type": "application/json",
@@ -66,15 +62,12 @@ func main() {
 			// TODO:: change ip
 			res, err := http.Post(remoteUrl, "application/json", payload)
 			if err != nil {
-				fmt.Println("sending post request")
-				fmt.Println(err)
 				return
 			}
 			defer res.Body.Close()
 
 			body, err := io.ReadAll(res.Body)
 			if err != nil {
-				fmt.Println("reading post body")
 				fmt.Println(err)
 				return
 			}
@@ -92,14 +85,12 @@ func main() {
 			for {
 				getTest, err := http.Get(fmt.Sprintf("%s/%s", remoteUrl, response.ID))
 				if err != nil {
-					fmt.Println("Sending get request")
 					fmt.Println(err)
 					return
 				}
 
 				body, err := io.ReadAll(getTest.Body)
 				if err != nil {
-					fmt.Println("reading get request")
 					fmt.Println(err)
 					return
 				}
@@ -108,7 +99,6 @@ func main() {
 				var getTestResponse Response
 				err = json.Unmarshal(body, &getTestResponse)
 				if err != nil {
-					fmt.Println("unmarshal get request")
 					return
 				}
 
@@ -118,7 +108,6 @@ func main() {
 				}
 
 				if getTestResponse.Status == "FINISHED" {
-					fmt.Println("hello")
 					ch <- getTestResponse.Results
 
 					break
@@ -127,17 +116,45 @@ func main() {
 				fmt.Println(fmt.Sprintf("unexpected status :%s", getTestResponse.Status))
 				break
 			}
-
-			fmt.Println("break the loop")
 		}(url)
 	}
 
 	wg.Wait()
 
+	close(ch)
+
+	var finalResult []Result
+
 	for r := range ch {
-		fmt.Println("hello")
-		fmt.Println(r)
+		for i, res := range r {
+			if len(finalResult) < (i + 1) {
+				finalResult = append(finalResult, res)
+			} else {
+				finalResult[i].Requests += res.Requests
+				finalResult[i].ErrorCodes += res.ErrorCodes
+			}
+		}
 	}
 
-	fmt.Println("hello")
+	data := [][]string{}
+
+	for _, row := range finalResult {
+		s := strconv.Itoa(row.Second)
+		r := strconv.Itoa(row.Requests)
+		l := strconv.Itoa(len(strings.Split(row.ErrorCodes, ",")))
+		data = append(data, []string{s, r, l})
+	}
+
+	file, err := os.Create("result.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+
+	defer writer.Flush()
+
+	writer.Write([]string{"Second", "Requests", "Error codes"})
+	writer.WriteAll(data)
 }
