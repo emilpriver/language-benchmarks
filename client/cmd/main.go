@@ -15,14 +15,8 @@ import (
 )
 
 var hosts = []string{
-	"http://172.232.132.21",
-	"http://172.232.132.130",
-	"http://172.232.158.39",
-	"http://172.232.158.78",
-	"http://172.232.158.51",
-	"http://172.232.158.61",
-	"http://172.232.148.207",
-	"http://172.232.148.51",
+	"http://172.232.158.148",
+	"http://172.232.132.75",
 }
 
 type Result struct {
@@ -61,7 +55,7 @@ func main() {
 				"tasks": 100,
 				"seconds": 400,
 				"start_at": "2023-09-17T10:16:34.675Z",
-				"url": "http://172.232.156.13:3000/json", 
+				"url": "http://172.232.158.142:3000", 
 				"content_type": "application/json",
 				"body": ""
 			}`)
@@ -151,7 +145,7 @@ func main() {
 		data = append(data, []string{s, r, l})
 	}
 
-	file, err := os.Create("results/node.csv")
+	file, err := os.Create("results/bun.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
