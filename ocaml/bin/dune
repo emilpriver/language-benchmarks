@@ -1,4 +1,4 @@
 (executable
  (public_name ocaml)
  (name main)
- (libraries ocaml))
+ (libraries ocaml lwt links))
