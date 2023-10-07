@@ -1,4 +1,4 @@
 (executable
- (public_name ocaml)
+ (public_name benchmark)
  (name main)
- (libraries ocaml lwt links))
+ (libraries benchmark dream))

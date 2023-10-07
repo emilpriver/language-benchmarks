@@ -1,3 +1,3 @@
-# Bun vs GO vs Rust benchmark
+# Rust vs Ocaml vs GO  benchmark
 
 Hello :D This is benchmark source code
