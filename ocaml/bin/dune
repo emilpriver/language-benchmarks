@@ -1,5 +1,5 @@
 (executable
  (public_name benchmark)
  (name main)
- (libraries benchmark dream yojson core ppx_deriving_yojson.runtime)
+ (libraries benchmark dream yojson core ppx_deriving_yojson.runtime eio_main)
  (preprocess (pps ppx_deriving_yojson)))
