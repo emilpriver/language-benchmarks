@@ -21,6 +21,8 @@ var hosts = []string{
 	"http://172.105.83.60",
 	"http://45.79.248.225",
 	"http://139.144.71.175",
+	"http://139.144.183.207",
+	"http://139.144.183.217",
 }
 
 type Result struct {
@@ -56,8 +58,8 @@ func main() {
 
 			payload := strings.NewReader(`{
 				"method": "GET",
-				"tasks": 500,
-				"seconds": 300,
+				"tasks": 100,
+				"seconds": 400,
 				"start_at": "2023-09-17T10:16:34.675Z",
 				"url": "http://172.232.132.88:3000/json", 
 				"content_type": "application/json",
@@ -149,7 +151,7 @@ func main() {
 		data = append(data, []string{s, r, l})
 	}
 
-	file, err := os.Create("results/ocaml.csv")
+	file, err := os.Create("results/go.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
