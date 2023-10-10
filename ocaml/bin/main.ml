@@ -5,7 +5,7 @@
 
 open Riot
 
-let port = 80
+let port = 3000
 let acceptors = 20
 
 type response = {
