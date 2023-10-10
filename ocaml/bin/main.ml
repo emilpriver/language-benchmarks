@@ -6,7 +6,7 @@
 open Riot
 
 let port = 3000
-let acceptors = 8
+let acceptors = 4
 
 type response = {
   message: string;
