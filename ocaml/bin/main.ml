@@ -14,9 +14,9 @@ type response = {
 [@@deriving yojson]
 
 let main () =
-  Riot.Logger.set_log_level (Some Info);
-  Server.Logger.set_log_level (Some Info);
-  Socket.Logger.set_log_level (Some Info);
+  Riot.Logger.set_log_level (Some Debug);
+  Server.Logger.set_log_level (Some Debug);
+  Socket.Logger.set_log_level (Some Debug);
 
   Riot.Logger.start () |> Result.get_ok;
 
