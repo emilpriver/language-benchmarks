@@ -56,10 +56,10 @@ func main() {
 
 			payload := strings.NewReader(`{
 				"method": "GET",
-				"tasks": 100,
+				"tasks": 500,
 				"seconds": 300,
 				"start_at": "2023-09-17T10:16:34.675Z",
-				"url": "http://172.232.132.88/json", 
+				"url": "http://172.232.132.88:3000/json", 
 				"content_type": "application/json",
 				"body": ""
 			}`)
@@ -149,7 +149,7 @@ func main() {
 		data = append(data, []string{s, r, l})
 	}
 
-	file, err := os.Create("results/ocaml.csv")
+	file, err := os.Create("results/rust.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
