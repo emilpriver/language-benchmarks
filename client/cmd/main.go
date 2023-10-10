@@ -15,14 +15,12 @@ import (
 )
 
 var hosts = []string{
-	"http://172.232.132.21",
-	"http://172.232.132.130",
-	"http://172.232.158.39",
-	"http://172.232.158.78",
-	"http://172.232.158.51",
-	"http://172.232.158.61",
-	"http://172.232.148.207",
-	"http://172.232.148.51",
+	"http://139.162.164.19",
+	"http://172.104.242.231",
+	"http://139.162.146.188",
+	"http://172.105.83.60",
+	"http://45.79.248.225",
+	"http://139.144.71.175",
 }
 
 type Result struct {
@@ -59,9 +57,9 @@ func main() {
 			payload := strings.NewReader(`{
 				"method": "GET",
 				"tasks": 100,
-				"seconds": 400,
+				"seconds": 360,
 				"start_at": "2023-09-17T10:16:34.675Z",
-				"url": "http://172.232.156.13:3000/json", 
+				"url": "http://172.232.132.88/json", 
 				"content_type": "application/json",
 				"body": ""
 			}`)
@@ -151,7 +149,7 @@ func main() {
 		data = append(data, []string{s, r, l})
 	}
 
-	file, err := os.Create("results/node.csv")
+	file, err := os.Create("results/ocaml.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
