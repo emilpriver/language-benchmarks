@@ -1,57 +1,42 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"sync"
+	"io"
+	"net/http"
 )
 
-func calculateSumOfSquares(chunk []int, wg *sync.WaitGroup, ch chan int) {
-	defer wg.Done()
-	sum := 0
-	for _, x := range chunk {
-		sum += x * x
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Hello from GO!\n")
+}
+
+func getJson(w http.ResponseWriter, r *http.Request) {
+	p := R{
+		Message: "Hello from Go!",
 	}
-	ch <- sum
+
+	b, err := json.Marshal(p)
+	if err != nil {
+		io.WriteString(w, "Boomer")
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
+type R struct {
+	Message string `json:"message"`
 }
 
 func main() {
-	numbers := make([]int, 1_000_000)
-	for i := 0; i < 1_000_000; i++ {
-		numbers[i] = i + 1
+	http.HandleFunc("/", getRoot)
+	http.HandleFunc("/json", getJson)
+
+	err := http.ListenAndServe(":3000", nil)
+	if err != nil {
+		panic(err)
 	}
-
-	chunkSize := 10_000
-	chunks := chunkList(numbers, chunkSize)
-
-	var wg sync.WaitGroup
-	ch := make(chan int, len(chunks))
-
-	for _, chunk := range chunks {
-		wg.Add(1)
-		go calculateSumOfSquares(chunk, &wg, ch)
-	}
-
-	go func() {
-		wg.Wait()
-		close(ch)
-	}()
-
-	totalSum := 0
-	for sum := range ch {
-		totalSum += sum
-	}
-
-	fmt.Printf("Sum of squares: %d\n", totalSum)
-}
-
-func chunkList(list []int, chunkSize int) [][]int {
-	var chunks [][]int
-	for i := 0; i < len(list); i += chunkSize {
-		end := i + chunkSize
-		if end > len(list) {
-			end = len(list)
-		}
-		chunks = append(chunks, list[i:end])
-	}
-	return chunks
+	fmt.Println("Listening on port 3000")
 }
