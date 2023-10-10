@@ -57,7 +57,7 @@ func main() {
 			payload := strings.NewReader(`{
 				"method": "GET",
 				"tasks": 100,
-				"seconds": 360,
+				"seconds": 300,
 				"start_at": "2023-09-17T10:16:34.675Z",
 				"url": "http://172.232.132.88/json", 
 				"content_type": "application/json",
