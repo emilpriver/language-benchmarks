@@ -149,7 +149,7 @@ func main() {
 		data = append(data, []string{s, r, l})
 	}
 
-	file, err := os.Create("results/rust.csv")
+	file, err := os.Create("results/ocaml.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
