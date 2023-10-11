@@ -20,7 +20,7 @@ module Http_protocol (H : Handler) : Server.Protocol = struct
     }
 end
 
-let start_link ?(host = "0.0.0.0") ?(port = 8080) ?(acceptors = 20)
+let start_link ?(host = "0.0.0.0") ?(port = 3000) ?(acceptors = 20)
     (handler : Httpaf.Reqd.t -> unit) =
   let connector =
     (module Server.Tcp_connector (Http_protocol (struct

@@ -6,7 +6,7 @@
 open Riot
 
 let port = 3000
-let acceptors = 8
+let acceptors = 20
 
 type response = {
   message: string;
@@ -14,9 +14,9 @@ type response = {
 [@@deriving yojson]
 
 let main () =
-  Riot.Logger.set_log_level (Some Debug);
-  Server.Logger.set_log_level (Some Debug);
-  Socket.Logger.set_log_level (Some Debug);
+  Riot.Logger.set_log_level (Some Info);
+  Server.Logger.set_log_level (Some Info);
+  Socket.Logger.set_log_level (Some Info);
 
   Riot.Logger.start () |> Result.get_ok;
 
@@ -26,7 +26,7 @@ let main () =
     Http_server.start_link ~port ~acceptors @@ fun reqd ->
     let req = Httpaf.Reqd.request reqd in
     Logger.debug (fun f -> f "request: %a" Httpaf.Request.pp_hum req);
-    if req.target = "/json" then
+     if req.target = "/json" then
       let json = response_to_yojson {message = "Hello from Ocaml" } 
         |> Yojson.Safe.to_string in
       let json_length = String.length(json)
@@ -42,5 +42,6 @@ let main () =
     loop ()
   in
   loop ()
+
 
 let () = Riot.run @@ main
