@@ -14,16 +14,7 @@ import (
 	"time"
 )
 
-var hosts = []string{
-	"http://139.162.164.19",
-	"http://172.104.242.231",
-	"http://139.162.146.188",
-	"http://172.105.83.60",
-	"http://45.79.248.225",
-	"http://139.144.71.175",
-	"http://139.144.183.207",
-	"http://139.144.183.217",
-}
+var hosts = []string{}
 
 type Result struct {
 	ID         string `json:"id"`
